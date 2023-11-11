@@ -34,7 +34,6 @@ exports.insert = (req, res) => {
 };
 
 exports.getAllTasks = (req, res) => {
-	console.log(db);
 	return res.status(200).json({ tasks: db });
 };
 
