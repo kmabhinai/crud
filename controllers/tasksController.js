@@ -3,7 +3,6 @@ let db = [];
 
 exports.insert = (req, res) => {
 	let task = [];
-	console.log(req.body);
 	if (req.body.title) {
 		task.push({
 			id: counter,
@@ -11,12 +10,12 @@ exports.insert = (req, res) => {
 			isCompleted: false,
 		});
 		counter++;
-		db.concat(task);
+		db = db.concat(task);
 		return res.status(200).json({
 			id: task[0].id,
 		});
-	} else if (req.body.posts) {
-		req.body.posts.forEach((post) => {
+	} else if (req.body.tasks) {
+		req.body.tasks.forEach((post) => {
 			task.push({
 				id: counter,
 				title: post.title,
@@ -24,15 +23,18 @@ exports.insert = (req, res) => {
 			});
 			counter++;
 		});
+		db = db.concat(task);
 		return res.status(200).json({
 			tasks: task.map((e) => {
 				return { id: e.id };
 			}),
 		});
 	}
+	return res.status(400).json({});
 };
 
 exports.getAllTasks = (req, res) => {
+	console.log(db);
 	return res.status(200).json({ tasks: db });
 };
 
@@ -53,7 +55,7 @@ exports.deleteTask = (req, res) => {
 
 exports.deleteMany = (req, res) => {
 	const ids = Array.from(req.body.tasks.map((e) => e.id));
-	db = db.filter((item) => ids.includes(item.id));
+	db = db.filter((item) => !ids.includes(item.id));
 	res.status(204).json({});
 };
 
